@@ -6,6 +6,7 @@ var MyModules = (
       deps[i] = modules[deps[i]]; // 把依赖项替换为实际的模块
     }
     console.log('函数', impl, JSON.stringify(impl));
+    console.log('依赖项', deps);
     modules[name] = impl.apply(impl, deps);
   }
 
@@ -30,13 +31,22 @@ MyModules.define("bar", [], function() {
 var bar = MyModules.get("bar");
 console.log(bar.hello("Nicholas"));
 
+MyModules.define("kate", [], function() {
+  function handleSy(who) {
+    return "sy sy sy" + who;
+  }
+  return {
+    handleSy: handleSy
+  };
+});
 
 console.log('------------------');
 
-MyModules.define("foo", ["bar"], function(bar) {
+MyModules.define("foo", ["bar", "kate"], function(bar, k) {
   var hungry = "hippo";
   function awesome() {
     console.log("bar", bar, typeof bar, this);
+    console.log("k", k, typeof k, this);
     console.log(bar.hello(hungry).toUpperCase());
   }
   return {
